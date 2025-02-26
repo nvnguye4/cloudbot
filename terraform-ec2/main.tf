@@ -33,7 +33,7 @@ provider "aws" {
     instance_type        = "t2.micro"
     key_name             = "discord-bot"
     security_groups      = [aws_security_group.discord_bot_sg.name]
-    iam_instance_profile = aws_iam_instance_profile.discord_bot_profile.name  # ✅ FIXED HERE
+    iam_instance_profile = aws_iam_instance_profile.discord_bot_profile.name
   
     user_data = <<-EOF
                 #!/bin/bash
