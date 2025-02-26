@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  discord-bot:
+    build: .
+    container_name: cloud-bot
+    restart: always
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
