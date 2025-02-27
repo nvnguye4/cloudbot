@@ -22,6 +22,33 @@ provider "aws" {
     roles      = [aws_iam_role.discord_bot_role.name]
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
   }
+
+  resource "aws_iam_policy" "ssm_parameter_access" {
+  name        = "SSMParameterAccess"
+  description = "Allows EC2 to access specific SSM parameters"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = "arn:aws:ssm:us-east-1:897729133201:parameter/BOT_TOKEN"
+
+      }
+    ]
+  })
+}
+
+  resource "aws_iam_policy_attachment" "ssm_policy_attachment" {
+  name       = "discord-bot-ssm-policy-attachment"
+  roles      = [aws_iam_role.discord_bot_role.name]
+  policy_arn = aws_iam_policy.ssm_parameter_access.arn
+  }
   
   resource "aws_iam_instance_profile" "discord_bot_profile" {
     name = "EC2ECRAccessProfile"

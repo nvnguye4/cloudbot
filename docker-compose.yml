@@ -4,6 +4,15 @@ services:
   discord-bot:
     build: .
     container_name: cloud-bot
-    restart: always
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    restart: unless-stopped
