@@ -46,7 +46,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           
           # AWS ECR Login
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 897729133201.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
           # Pull Docker images
           docker pull <your-dockerhub-username>/cloudbot:latest
