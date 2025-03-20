@@ -1,6 +1,18 @@
+terraform {
+  backend "s3" {
+    bucket         = "nvnguye4sb" 
+    key            = "terraform.tfstate"        
+    region         = "us-east-1"               
+    encrypt        = true                          
+    dynamodb_table = "terraform-lock"
+  }
+}
+
+
 provider "aws" {
     region = "us-east-1"
   }
+  
   
   resource "aws_iam_role" "discord_bot_role" {
     name = "EC2ECRAccessRole"
