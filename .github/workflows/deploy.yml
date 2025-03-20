@@ -33,7 +33,7 @@ jobs:
 
     - name: Get EC2 Instance IP
       id: ec2
-      run: echo "EC2_IP=$(terraform output -raw public_ip)" >> $GITHUB_ENV
+      run: echo "EC2_IP=$(terraform output -raw public_ip 2>/dev/null)" >> $GITHUB_ENV
       working-directory: terraform-ec2
 
     - name: Deploy Docker Containers
