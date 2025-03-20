@@ -60,3 +60,5 @@ jobs:
           docker rm redis-cache || true
           docker run -d --name redis-cache --network bot-network -p 6379:6379 redis:latest
           docker run -d --name cloud-bot --network bot-network -e BOT_TOKEN=$(aws ssm get-parameter --name "BOT_TOKEN" --with-decryption --query "Parameter.Value" --output text) -e REDIS_HOST=redis -e REDIS_PORT=6379 <your-dockerhub-username>/cloudbot:latest
+
+          #updated ssh
