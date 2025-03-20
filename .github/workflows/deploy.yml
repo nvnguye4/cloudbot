@@ -49,7 +49,7 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 897729133201.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
           # Pull Docker images
-          docker pull <your-dockerhub-username>/cloudbot:latest
+          docker pull nvnguye4/cloudbot:latest
           docker pull redis:latest
 
           # Run the containers
@@ -59,6 +59,4 @@ jobs:
           docker stop redis-cache || true
           docker rm redis-cache || true
           docker run -d --name redis-cache --network bot-network -p 6379:6379 redis:latest
-          docker run -d --name cloud-bot --network bot-network -e BOT_TOKEN=$(aws ssm get-parameter --name "BOT_TOKEN" --with-decryption --query "Parameter.Value" --output text) -e REDIS_HOST=redis -e REDIS_PORT=6379 <your-dockerhub-username>/cloudbot:latest
-
-          #updated ssh
+          docker run -d --name cloud-bot --network bot-network -e BOT_TOKEN=$(aws ssm get-parameter --name "BOT_TOKEN" --with-decryption --query "Parameter.Value" --output text) -e REDIS_HOST=redis -e REDIS_PORT=6379 nvnguye4/cloudbot:latest
