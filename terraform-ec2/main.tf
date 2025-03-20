@@ -65,18 +65,29 @@ provider "aws" {
     user_data = <<-EOF
                 #!/bin/bash
                 yum update -y
+                yum install -y docker
+                service docker start
+                usermod -aG docker ec2-user
+                chkconfig docker on
                 amazon-linux-extras enable docker
-                yum install docker -y
+                yum install -y amazon-linux-extras
+                yum install -y git
+                curl -fsSL https://get.docker.com -o get-docker.sh
+                sh get-docker.sh
+                yum install -y docker-compose
                 systemctl start docker
                 systemctl enable docker
-                usermod -aG docker ec2-user
-  
-                # Login to AWS ECR
-                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 897729133201.dkr.ecr.us-east-1.amazonaws.com
-  
-                # Pull and run the Discord bot container
-                docker pull 897729133201.dkr.ecr.us-east-1.amazonaws.com/cloud-bot:latest
-                docker run -d --restart unless-stopped --name cloud-bot -e BOT_TOKEN=$(aws ssm get-parameter --name "BOT_TOKEN" --with-decryption --query "Parameter.Value" --output text) 897729133201.dkr.ecr.us-east-1.amazonaws.com/cloud-bot:latest
+
+                yum install -y aws-cli
+
+                $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 897729133201.dkr.ecr.us-east-1.amazonaws.com)
+
+                docker pull nvnguye4/cloudbot:latest
+                docker pull redis:latest
+
+                docker network create bot-network
+                docker run -d --name redis-cache --network bot-network -p 6379:6379 redis:latest
+                docker run -d --name cloud-bot --network bot-network -e BOT_TOKEN=$(aws ssm get-parameter --name "BOT_TOKEN" --with-decryption --query "Parameter.Value" --output text) -e REDIS_HOST=redis -e REDIS_PORT=6379 nvnguye4/cloudbot:latest
                 EOF
   
     tags = {

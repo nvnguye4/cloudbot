@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder} = require('discord.js');
 const { taskQueue } = require('../events/utils/queue');
 
 module.exports = 
@@ -9,7 +9,8 @@ module.exports =
     
     async execute(interaction) 
     {
+        await interaction.reply({content: "🏓 Pong! (Processing in background...)" , ephemeral: true});
         await taskQueue.add("pingCommand", { user: interaction.user.id });
-        await interaction.reply({ content: "🏓 Pong! (Processing in background...)", ephemeral: true });
+
     }
 };
