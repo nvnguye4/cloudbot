@@ -53,10 +53,10 @@ jobs:
           docker pull redis:latest
 
           # Run the containers
-          docker network create bot-network || true
-          docker stop cloud-bot || true
-          docker rm cloud-bot || true
+          docker network inspect bot-network >/dev/null 2>&1 || docker network create bot-network
+          docker stop cloudbot || true
+          docker rm cloudbot || true
           docker stop redis-cache || true
           docker rm redis-cache || true
           docker run -d --name redis-cache --network bot-network -p 6379:6379 redis:latest
-          docker run -d --name cloud-bot --network bot-network -e BOT_TOKEN=$(aws ssm get-parameter --name "BOT_TOKEN" --with-decryption --query "Parameter.Value" --output text) -e REDIS_HOST=redis -e REDIS_PORT=6379 nvnguye4/cloudbot:latest
+          docker run -d --name cloudbot --network bot-network -e BOT_TOKEN=$(aws ssm get-parameter --name "BOT_TOKEN" --with-decryption --query "Parameter.Value" --output text) -e REDIS_HOST=redis -e REDIS_PORT=6379 897729133201.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/cloudbot:latest
